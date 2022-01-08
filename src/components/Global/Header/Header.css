@@ -1,0 +1,42 @@
+
+
+.header {
+  margin-top: 0;
+  max-width: 100%;
+  min-height: 35px;
+  display: block;
+  padding-right: 100px;
+  padding-top: 10px;
+}
+.header a {
+    color: inherit;
+    font-size: 25px;
+    text-decoration: none;
+    float: right;
+    padding-left: 60px;
+}
+.header a::after {
+  content: '';
+  width: 0px;
+  height: 1px;
+  display: block;
+  background: #6495ED;
+  transition: 350ms;
+}
+
+.header a:hover::after {
+  width: 100%;
+}
+
+@media only screen and (max-width: 400px) {
+  .header {
+    padding: 0px 10px;
+  }
+  .header a {
+      color: inherit;
+      font-size: 25px;
+      text-decoration: none;
+      float: right;
+      padding-left: 20px;
+  }
+}

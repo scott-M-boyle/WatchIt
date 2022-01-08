@@ -1,0 +1,27 @@
+.accordion-item {
+  position: relative;
+  padding: 12px 0px;
+}
+.accordion-item:after {
+  position: absolute;
+  content: "";
+  height: 2px;
+  bottom: 0px;
+  width: 100%;
+  border-bottom: 2px solid rgb(152,152,152);
+}
+
+.accordion-title {
+  font-size: 25px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+.accordion-content, .accordion-content ul {
+  padding: 0px 20px;
+}
+
+.accordion-content {
+    font-size: 20px;
+}

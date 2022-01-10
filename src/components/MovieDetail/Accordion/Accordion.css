@@ -17,11 +17,19 @@
   display: flex;
   justify-content: space-between;
   padding-bottom: 10px;
+  font-family: 'Raleway', sans-serif;
 }
+.accordion-title:hover {
+  cursor: pointer;
+  color: rgb(83, 118, 171)
+}
+
+
 .accordion-content, .accordion-content ul {
   padding: 0px 20px;
 }
 
 .accordion-content {
     font-size: 20px;
+    font-family: 'Lato', sans-serif;
 }

@@ -1,0 +1,12 @@
+.video {
+  position: relative;
+}
+
+.close-video {
+  font-size: 50px;
+  width:853;
+  height:480;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

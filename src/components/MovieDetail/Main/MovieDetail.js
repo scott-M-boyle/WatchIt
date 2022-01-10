@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useParams, useLocation} from "react-router-dom";
 
-import './MovieDetail.css';
-import Layout from '../Global/Layout/Layout';
-import Accordion from './Accordion/Accordion';
-import Video from '../Youtube/video/Video';
+import './MovieDetail.css'
+import Layout from '../../Global/Layout/Layout';
+import Accordion from '../Accordion/Accordion';
+import Video from '../../Youtube/video/Video';
+import {useOnClickOutside} from '../../../Hooks';
 const axios = require('axios');
 
 
@@ -13,6 +14,13 @@ const axios = require('axios');
 const MovieDetail =() => {
   const id = useParams();
   const location = useLocation();
+
+  const videoRef = useRef();
+
+  useOnClickOutside(videoRef, () => {
+    setDisplayVideo(false);
+  })
+
 
   const [activeMovie, setActiveMovie] = useState({})
   const [displayVideo, setDisplayVideo] = useState(false);
@@ -37,6 +45,9 @@ const MovieDetail =() => {
     setDisplayVideo(true);
     setactiveVideoID(key);
   }
+
+
+
 
   const displayThumnbails = () => {
     if (activeMovie.videos === undefined) {
@@ -90,7 +101,7 @@ const MovieDetail =() => {
             <Accordion title="Spoken Languages" content={activeMovie.spoken_languages}/>
             <Accordion title="Homepage" content={activeMovie.homepage}/>
           </div>
-          <Video videoKey={activeVideoID} open={displayVideo}/>
+          <div ref={videoRef} ><Video videoKey={activeVideoID} open={displayVideo}/> </div>
         </div>
 
       </div>

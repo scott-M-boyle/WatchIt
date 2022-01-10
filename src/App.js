@@ -7,7 +7,7 @@ import {
 
 import Home from './components/Home/Home';
 import SeeMoreSection from './components/SeeMore/SeeMoreSection/SeeMoreSection';
-import MovieDetail from './components/MovieDetail/MovieDetail';
+import MovieDetail from './components/MovieDetail/Main/MovieDetail';
 
 export default function App(){
   return (

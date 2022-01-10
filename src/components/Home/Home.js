@@ -11,7 +11,7 @@ const axios = require('axios');
 class Home extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { popularMovies: [], popularSeries: [], upcoming: [], highestRated: []}
+    this.state = { popularMovies: [], upcomingMovies: [], highestRated: [], popularSeries: [],  dataLoaded: false, }
 
     this.getData()
   }
@@ -19,28 +19,24 @@ class Home extends React.Component {
 
 
 
- getData = () => {
-    axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`)
-      .then(res => {
-          this.setState({popularMovies: res.data.results} ,() =>{
-            this.state.popularMovies.forEach((movie) =>{
-            })
+ getData = async () => {
+
+   const endpoints = [
+     `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`,
+     `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`,
+     `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`,
+     `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
+   ]
+
+   axios.all(endpoints.map((promise) => axios.get(promise))).then(
+     //destructure data.results from each endpoint
+     axios.spread(({data: {results: popularMovies}}, {data: {results: upcomingMovies}},
+        {data: {results: highestRated}}, {data: {results: popularSeries}}) => {
+          this.setState({popularMovies, upcomingMovies, highestRated, popularSeries} , () =>{
+              this.setState({dataLoaded: true})
           })
       })
-
-    axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`)
-    .then(res =>{
-      this.setState({upcoming: res.data.results})
-    })
-    axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`)
-    .then(res => {
-      this.setState({highestRated: res.data.results})
-    })
-    axios.get(`https://api.themoviedb.org/3/tv/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`)
-    .then(res => {
-      this.setState({popularSeries: res.data.results})
-    })
-
+    )
   }
 
 
@@ -49,14 +45,13 @@ class Home extends React.Component {
 
   renderPosters(data, type) {
     return data.map((media, index) =>{
-
       if (index < 4) {
         return <div className = "section-poster" key={media.id}>
         <Link
           to={`/${type}/${media.id}`}
           state={{mediaType: type}}> <img src={`https://image.tmdb.org/t/p/original/${media.poster_path}`} alt={media.title} /> </Link>
             <div className = "poster-hidden">
-              <h3 style={{color: "white"}}> Like this film? </h3>
+              <h3> Like this film? </h3>
               <button className = "see-similar"> See similar </button>
             </div>
         </div>
@@ -66,8 +61,12 @@ class Home extends React.Component {
         }
     })
   }
-
   render() {
+    if (this.state.dataLoaded === false){
+      return <div className = "loader-container">
+        <div class = "loader">  </div>
+      </div>
+    }
     return (
       <Layout>
       <div className = "home-container">
@@ -79,7 +78,7 @@ class Home extends React.Component {
           <HomeSection title ="Popular Movies" seeMore="PopularMovies "renderPosters={this.renderPosters}
           data={this.state.popularMovies} type="movie" />
           <HomeSection title ="Upcoming Movies" seeMore = "UpcomingMovies" renderPosters={this.renderPosters}
-          data ={this.state.upcoming} type="movie" />
+          data ={this.state.upcomingMovies} type="movie" />
           <HomeSection title ="Highest Rated Movies" seeMore="HighestRatedMovies" renderPosters={this.renderPosters}
           data ={this.state.highestRated} type="movie" />
           <HomeSection title ="Popular TV Series" seeMore="PopularTVSeries" renderPosters={this.renderPosters}

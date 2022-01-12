@@ -1,15 +1,21 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Link } from 'react-router-dom';
 import {useParams} from "react-router-dom";
+
 import './SeeMoreSection.css';
-import Layout from '../../Global/Layout/Layout';
+import Layout from '../Global/Layout/Layout';
+import Loader from '../Global/Loader/Loader';
+import ImageCard from '../Global/ImageCard/ImageCard';
+
 const axios = require('axios');
 
 
 let nextPage = 2;
 
 const PopularMovies = () =>{
-  const [popularMovies, setPopularMovies] = useState([])
+
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [popularMovies, setPopularMovies] = useState([]);
   const [endpoint, _setEndpoint] = useState("");
   const [mediaType, setMediaType] = useState("")
   const category = useParams().section;
@@ -30,7 +36,9 @@ const PopularMovies = () =>{
     category.includes("Movie") ? setMediaType("movie") : setMediaType("tv")
     async function fetchData(){
       const response = await axios.get(endpoint);
-      setPopularMovies(response.data.results)
+      setPopularMovies(response.data.results);
+      setDataLoaded(true);
+
     }
     fetchData();
   }, [endpoint])
@@ -49,7 +57,7 @@ const PopularMovies = () =>{
   function setCategory() {
     switch(category) {
   case "PopularMovies":
-    setEndpoint(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`);
+      setEndpoint(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`);
     break;
   case "UpcomingMovies":
     setEndpoint(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US`);
@@ -60,12 +68,14 @@ const PopularMovies = () =>{
   case "PopularTVSeries":
     setEndpoint(`https://api.themoviedb.org/3/tv/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
     break;
+  case "AiringTVSeries":
+    setEndpoint(`https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.REACT_APP_TMDB_API_KEY}`);
+    break;
 }
   }
 
   /*retrieves more data if we scroll to the bottom*/
   const handleScroll = async () => {
-
     const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight
     if (bottom) {
       const response = await axios.get(`${endpointRef.current}&page=${nextPage}`);
@@ -76,18 +86,13 @@ const PopularMovies = () =>{
 
   const renderPosters = () => {
     return popularMovies.map((movie) => {
-      return <div className = "section-poster" alt={movie.id}>
-      <Link
-        to={`/${mediaType}/${movie.id}`}
-        state={{mediaType}}>
-          <img src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`} alt={movie.title} />
-      </Link>
-       </div>
+      return  <ImageCard type={mediaType} id={movie.id} poster_path={movie.poster_path} title={movie.title} />
     })
   }
 
-
-
+  if (dataLoaded === false) {
+    return <Loader />
+  }
   return (
     <Layout>
       <div className = "SeeMoreSection">

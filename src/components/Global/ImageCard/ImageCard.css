@@ -1,0 +1,29 @@
+.section-posters {
+  display: flex;
+}
+.section-poster {
+  position: relative;
+  transition:  0.5s ease;
+}
+
+.poster-hidden {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: none;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.section-poster:hover {
+  opacity: 0.8
+}
+
+.section-poster:hover .poster-hidden {
+    display: block;
+}
+.section-poster h3 {
+  color: white;
+  font-size: 25px;
+}

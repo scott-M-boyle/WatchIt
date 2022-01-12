@@ -3,9 +3,7 @@ import Modal from '../Modal/Modal';
 
 import './Video.css';
 
-const Video = ({open, videoKey}) =>{
-  if (!open) return null;
-
+const Video = ({ videoKey}) =>{
   return (
     <Modal>
     <div className = "video">

@@ -21,7 +21,6 @@ const MovieDetail =() => {
     setDisplayVideo(false);
   })
 
-
   const [activeMovie, setActiveMovie] = useState({})
   const [displayVideo, setDisplayVideo] = useState(false);
   const [activeVideoID, setactiveVideoID] = useState(null)
@@ -40,6 +39,9 @@ const MovieDetail =() => {
     const body = document.querySelector('body');
     body.style.overflow = displayVideo ? 'hidden' : 'auto';
   }, [displayVideo])
+
+
+
 
   const handleThumbnailClick = (key) => {
     setDisplayVideo(true);
@@ -101,7 +103,7 @@ const MovieDetail =() => {
             <Accordion title="Spoken Languages" content={activeMovie.spoken_languages}/>
             <Accordion title="Homepage" content={activeMovie.homepage}/>
           </div>
-          <div ref={videoRef} ><Video videoKey={activeVideoID} open={displayVideo}/> </div>
+          { (displayVideo) ? <div ref={videoRef} ><Video videoKey={activeVideoID}/> </div> : null }
         </div>
 
       </div>

@@ -3,7 +3,8 @@ import './Home.css'
 import HomeSection from './HomeSection';
 import { Link } from 'react-router-dom';
 import Layout from '../Global/Layout/Layout';
-
+import Loader from '../Global/Loader/Loader';
+import ImageCard from '../Global/ImageCard/ImageCard';
 
 const axios = require('axios');
 
@@ -11,7 +12,7 @@ const axios = require('axios');
 class Home extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { popularMovies: [], upcomingMovies: [], highestRated: [], popularSeries: [],  dataLoaded: false, }
+    this.state = { popularMovies: [], upcomingMovies: [], highestRated: [], popularSeries: [], airingTVSeries:[],  dataLoaded: false, }
 
     this.getData()
   }
@@ -25,47 +26,36 @@ class Home extends React.Component {
      `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`,
      `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`,
      `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&page=1`,
-     `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
+     `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.REACT_APP_TMDB_API_KEY}`,
+     `https://api.themoviedb.org/3/tv/on_the_air?api_key=${process.env.REACT_APP_TMDB_API_KEY}`
    ]
 
    axios.all(endpoints.map((promise) => axios.get(promise))).then(
      //destructure data.results from each endpoint
      axios.spread(({data: {results: popularMovies}}, {data: {results: upcomingMovies}},
-        {data: {results: highestRated}}, {data: {results: popularSeries}}) => {
-          this.setState({popularMovies, upcomingMovies, highestRated, popularSeries} , () =>{
+        {data: {results: highestRated}}, {data: {results: popularSeries}}, {data: {results: airingTVSeries}}) => {
+          this.setState({popularMovies, upcomingMovies, highestRated, popularSeries, airingTVSeries} , () =>{
+            console.log(this.state)
               this.setState({dataLoaded: true})
           })
       })
     )
   }
 
-
-
-
-
   renderPosters(data, type) {
     return data.map((media, index) =>{
       if (index < 4) {
-        return <div className = "section-poster" key={media.id}>
-        <Link
-          to={`/${type}/${media.id}`}
-          state={{mediaType: type}}> <img src={`https://image.tmdb.org/t/p/original/${media.poster_path}`} alt={media.title} /> </Link>
-            <div className = "poster-hidden">
-              <h3> Like this film? </h3>
-              <button className = "see-similar"> See similar </button>
-            </div>
-        </div>
+        return <ImageCard type={type} id={media.id} title={media.title} poster_path={media.poster_path} />
         }
         else {
           return null;
         }
     })
   }
+
   render() {
     if (this.state.dataLoaded === false){
-      return <div className = "loader-container">
-        <div class = "loader">  </div>
-      </div>
+      return <Loader />
     }
     return (
       <Layout>
@@ -83,9 +73,8 @@ class Home extends React.Component {
           data ={this.state.highestRated} type="movie" />
           <HomeSection title ="Popular TV Series" seeMore="PopularTVSeries" renderPosters={this.renderPosters}
           data ={this.state.popularSeries} type="tv"/>
-
-
-
+          <HomeSection title ="Currently Airing TV Series" seeMore="AiringTVSeries" renderPosters={this.renderPosters}
+          data ={this.state.airingTVSeries} type="tv"/>
         </main>
        </div>
        </Layout>

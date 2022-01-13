@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../Modal/Modal';
+import Modal from '../../../Modal/Modal';
 
 import './Video.css';
 
@@ -16,7 +16,6 @@ const Video = ({ videoKey}) =>{
         allowFullScreen
         title="Embedded youtube"
       />
-      <div className = "close-video"> X </div>
     </div>
     </Modal>
   )

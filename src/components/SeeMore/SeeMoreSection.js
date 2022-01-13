@@ -86,7 +86,8 @@ const PopularMovies = () =>{
 
   const renderPosters = () => {
     return popularMovies.map((movie) => {
-      return  <ImageCard type={mediaType} id={movie.id} poster_path={movie.poster_path} title={movie.title} />
+      return  <ImageCard type={mediaType} id={movie.id} poster_path={movie.poster_path}
+      title={ mediaType === "movie" ? movie.title : movie.name} key={movie.id} />
     })
   }
 

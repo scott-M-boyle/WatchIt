@@ -1,0 +1,21 @@
+.thumbnail h4 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.thumbnail-image {
+  position: relative;
+  display: flex;
+}
+.play-video {
+  position: absolute;
+  bottom: 0%;
+  right: 4%;
+  max-width: 40px;
+  overflow: hidden;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.play-video img:hover {
+    opacity: 1;
+}

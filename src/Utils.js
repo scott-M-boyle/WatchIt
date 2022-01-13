@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import{useEffect} from 'react';
 
 //listens for click and closes modal if user clicks outside of modal
 export function useOnClickOutside(ref, handler) {

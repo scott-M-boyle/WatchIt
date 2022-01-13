@@ -27,3 +27,19 @@ useEffect(
   [ref, handler]
 );
 }
+
+//Checks if string is a URL
+export function isValidHttpUrl(string) {
+let url;
+try {
+  url = new URL(string);
+} catch (_) {
+  return false;
+}
+return url.protocol === "http:" || url.protocol === "https:";
+}
+
+//converts budget and revenue into readable string
+export function readableNum(x) {
+    return "$" + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

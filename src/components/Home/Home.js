@@ -52,7 +52,6 @@ class Home extends React.Component {
         }
     })
   }
-
   render() {
     if (this.state.dataLoaded === false){
       return <Loader />

@@ -1,20 +1,12 @@
 import React, {useState} from 'react';
 import './Accordion.css';
 
+import {isValidHttpUrl, readableNum} from '../../../Utils';
+
 
 const Accordion = (props) =>{
   const [isActive, setIsActive] = useState(false);
 
-  function isValidHttpUrl(string) {
-  let url;
-
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
-  }
-  return url.protocol === "http:" || url.protocol === "https:";
-}
   const renderList = () =>{
     return props.content.map((item) =>{
       return <li> {item.english_name} </li>
@@ -27,6 +19,9 @@ const renderContent = () => {
   }
   if (isValidHttpUrl(props.content)) {
     return <a href={props.content}> {props.content} </a>
+  }
+  if (props.title === "Budget" || props.title === "Revenue" ) {
+    return <div> {readableNum(props.content)} </div>
   }
   return <> {props.content} </>
 }

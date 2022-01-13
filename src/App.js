@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import ScrollToTop from './ScrollToTop';
 
 import Home from './components/Home/Home';
 import SeeMoreSection from './components/SeeMore/SeeMoreSection';
@@ -12,6 +13,7 @@ import MovieDetail from './components/MovieDetail/Main/MovieDetail';
 export default function App(){
   return (
     <Router>
+    <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home  />} />
         <Route path="/SeeMore/:section" element = {<SeeMoreSection />} />

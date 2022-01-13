@@ -57,6 +57,22 @@
 .main-poster {
   margin-bottom: 30px;
 }
+.movieDetail-similar {
+  max-width: 75%;
+  width: 175px;
+  padding: 5px;
+    border: 1px solid black;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.movieDetail-similar h4{
+  margin: 0;
+  font-size: 20px;
+}
 
 
     /*-----youtube-----*/
@@ -74,21 +90,6 @@
   opacity: 0.8;
 }
 
-.thumbnail {
-  position: relative;
-}
-.play-video {
-  position: absolute;
-  bottom: 0%;
-  right: 4%;
-  max-width: 40px;
-  overflow: hidden;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-.play-video img:hover {
-    opacity: 1;
-}
 
 .genres-container  {
   width: 100%;

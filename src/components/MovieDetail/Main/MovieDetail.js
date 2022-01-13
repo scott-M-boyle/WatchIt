@@ -1,12 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {useParams, useLocation} from "react-router-dom";
+import {useParams, useLocation, Link} from "react-router-dom";
 
 import './MovieDetail.css'
 import Layout from '../../Global/Layout/Layout';
 import MovieAccordion from '../Accordion/MovieAccordion';
 import TVAccordion from '../Accordion/TVAccordion';
+import Thumbnail from '../../Youtube/Thumbnail/Thumbnail';
 
-import Video from '../../Youtube/video/Video';
+import Video from '../../Youtube/Video/Video';
 import {useOnClickOutside} from '../../../Utils';
 const axios = require('axios');
 
@@ -16,6 +17,10 @@ const axios = require('axios');
 const MovieDetail =() => {
   const id = useParams();
   const location = useLocation();
+
+  //Returns movie or tv from url path
+  const mediaType = useLocation().pathname.split("/")[1];
+
 
   const videoRef = useRef();
 
@@ -27,10 +32,11 @@ const MovieDetail =() => {
   const [displayVideo, setDisplayVideo] = useState(false);
   const [activeVideoID, setactiveVideoID] = useState(null)
 
+  //Retrieve and save data
   useEffect(() =>{
     async function fetchData(){
       const response = await axios.get
-      (`https://api.themoviedb.org/3/${location.state.mediaType}/${id.id}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&append_to_response=videos`)
+      (`https://api.themoviedb.org/3/${mediaType}/${id.id}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&append_to_response=videos`)
         setActiveMedia(response.data);
         console.log(response.data)
     }
@@ -66,16 +72,11 @@ const MovieDetail =() => {
     if (activeMedia.videos === undefined) {
       return
     }
-    return activeMedia.videos.results.map((movie, index) =>{
+    return activeMedia.videos.results.map((video, index) =>{
       if (index >= 3){
         return null;
       }
-        return <div className = "thumbnail">
-        <img src={`https://img.youtube.com/vi/${movie.key}/0.jpg`} alt={movie.name} onClick={() => handleThumbnailClick(movie.key)}  />
-          <div className = "play-video">
-            <img src="https://img.icons8.com/flat-round/50/000000/play--v1.png" alt="play"/> <
-          /div>
-          </div>
+        return <Thumbnail video={video} handleThumbnailClick={handleThumbnailClick} key={video.id} />
           //<img src="https://img.icons8.com/ios-glyphs/30/000000/play--v1.png"/>
     })
   }
@@ -83,13 +84,13 @@ const MovieDetail =() => {
   const renderGenres = () =>{
     if (Object.keys(activeMedia).length > 0) {
       return activeMedia.genres.map((genre) =>{
-        return <div className="genre"> {genre.name} </div>
+        return <div className="genre" key={genre.id}> {genre.name} </div>
       })
     }
   }
 
   const renderAccordion = () =>{
-    return (location.state.mediaType === "movie") ?
+    return (mediaType === "movie") ?
      <MovieAccordion activeMedia = {activeMedia}/>
     :
       <TVAccordion activeMedia = {activeMedia}/>
@@ -109,6 +110,10 @@ const MovieDetail =() => {
       </div>
         <div className = "movie-detail-box">
           <img className = "main-poster" src={`https://image.tmdb.org/t/p/original/${activeMedia.poster_path}`} alt={activeMedia.title} />
+          <div className = "movieDetail-similar">
+            <h4> Like this movie? </h4>
+            <Link className = "movieDetail-similar-button" to=""> See Similar </Link>
+          </div>
           <div className = "youtube-thumbnails">{displayThumnbails()} </div>
           <div className = "genres-container">
             {renderGenres()}

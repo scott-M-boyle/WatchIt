@@ -39,7 +39,7 @@
 }
 
 .movie-detail-box {
-  max-width: 75%;
+  max-width: 80%;
   width: 600px;
   display: flex;
   flex-direction: column;
@@ -75,7 +75,19 @@
 }
 
 
+
+
     /*-----youtube-----*/
+.youtube-videos-container {
+  display: flex;
+  align-items: center;
+}
+.horizontal-scroll {
+  width: 150px;
+  transition:  4.5s ease;
+}
+
+
 .youtube-thumbnails {
   display: flex;
   flex-direction: row;

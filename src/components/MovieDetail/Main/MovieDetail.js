@@ -18,6 +18,8 @@ const MovieDetail =() => {
   const id = useParams();
   const location = useLocation();
 
+
+
   //Returns movie or tv from url path
   const mediaType = useLocation().pathname.split("/")[1];
 
@@ -31,14 +33,15 @@ const MovieDetail =() => {
   const [activeMedia, setActiveMedia] = useState({})
   const [displayVideo, setDisplayVideo] = useState(false);
   const [activeVideoID, setactiveVideoID] = useState(null)
+  const [displayThumbnails, setDisplayThumbnails] = useState({max: null, current: [0,1,2]})
 
   //Retrieve and save data
   useEffect(() =>{
     async function fetchData(){
       const response = await axios.get
       (`https://api.themoviedb.org/3/${mediaType}/${id.id}?api_key=${process.env.REACT_APP_TMDB_API_KEY}&language=en-US&append_to_response=videos`)
-        setActiveMedia(response.data);
-        console.log(response.data)
+        setActiveMedia(response.data)
+        setDisplayThumbnails({max: response.data.videos.results.length, current: [...displayThumbnails.current] })
     }
     fetchData();
   }, [])
@@ -57,28 +60,57 @@ const MovieDetail =() => {
    	 		}
   			}, [])
 
-
-
-
   const handleThumbnailClick = (key) => {
     setDisplayVideo(true);
     setactiveVideoID(key);
   }
 
-
-
-
   const displayThumnbails = () => {
     if (activeMedia.videos === undefined) {
       return
     }
-    return activeMedia.videos.results.map((video, index) =>{
-      if (index >= 3){
-        return null;
-      }
-        return <Thumbnail video={video} handleThumbnailClick={handleThumbnailClick} key={video.id} />
-          //<img src="https://img.icons8.com/ios-glyphs/30/000000/play--v1.png"/>
+
+    return displayThumbnails.current.map((num) => {
+      return <Thumbnail video={activeMedia.videos.results[num]} handleThumbnailClick={handleThumbnailClick} key={activeMedia.videos.results[num].id} />
     })
+    // return activeMedia.videos.results.map((video, index) =>{
+    //   if (index >= 3){
+    //     return null;
+    //   }
+    //     return <Thumbnail video={video} handleThumbnailClick={handleThumbnailClick} key={video.id} />
+    //       //<img src="https://img.icons8.com/ios-glyphs/30/000000/play--v1.png"/>
+    // })
+  }
+
+
+  const scrollThumbnails = (direction) => {
+    if (direction === "left") {
+      const newCurrent = displayThumbnails.current.map((num) =>{
+        if (num === 0){
+          return displayThumbnails.max-1
+        }
+        return num-=1;
+      })
+      setDisplayThumbnails(prevState =>{
+        return {max: prevState.max, current: newCurrent}
+      }, () =>{
+      })
+    }
+    else {
+      const newCurrent = displayThumbnails.current.map((num) => {
+        if (num === displayThumbnails.max-1){
+          return 0;
+        }
+        return num+=1;
+      })
+      setDisplayThumbnails(prevState =>{
+        return {max: prevState.max, current: newCurrent}
+      }, () =>{
+        console.log(displayThumbnails)
+      })
+
+    }
+
   }
 
   const renderGenres = () =>{
@@ -114,7 +146,11 @@ const MovieDetail =() => {
             <h4> Like this movie? </h4>
             <Link className = "movieDetail-similar-button" to=""> See Similar </Link>
           </div>
+          <div className = "youtube-videos-container">
+          <div className = "horizontal-scroll" onClick = {() => scrollThumbnails("left")}> <img src="https://img.icons8.com/material-outlined/24/000000/double-left.png"/> </div>
           <div className = "youtube-thumbnails">{displayThumnbails()} </div>
+          <div className = "horizontal-scroll" onClick = {() => scrollThumbnails("right")}> <img src="https://img.icons8.com/ios-glyphs/30/000000/double-right--v2.png"/> </div>
+          </div>
           <div className = "genres-container">
             {renderGenres()}
           </div>

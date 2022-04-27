@@ -1,7 +1,6 @@
 import React from 'react';
 import Modal from '../../../Modal/Modal';
 
-import './Video.css';
 
 const Video = ({ videoKey}) =>{
   return (

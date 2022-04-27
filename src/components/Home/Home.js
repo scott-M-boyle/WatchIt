@@ -1,7 +1,6 @@
 import React from 'react';
 import './Home.css'
 import HomeSection from './HomeSection';
-import { Link } from 'react-router-dom';
 import Layout from '../Global/Layout/Layout';
 import Loader from '../Global/Loader/Loader';
 import ImageCard from '../Global/ImageCard/ImageCard';
@@ -40,7 +39,6 @@ class Home extends React.Component {
   }
 
   renderPosters(data, type) {
-    console.log(data)
     return data.map((media, index) =>{
       if (index < 4) {
         return <ImageCard type={type} id={media.id}

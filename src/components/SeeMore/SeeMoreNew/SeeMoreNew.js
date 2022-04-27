@@ -12,7 +12,7 @@ const axios = require('axios');
 
 let nextPage = 2;
 
-const PopularMovies = (props) =>{
+const PopularMovies = () =>{
 
   const [dataLoaded, setDataLoaded] = useState(false);
   const [popularMovies, setPopularMovies] = useState([]);
@@ -20,19 +20,11 @@ const PopularMovies = (props) =>{
   const [mediaType, setMediaType] = useState("")
   const category = useParams().section;
 
-  //create a ref to allow eventListener to access updated state
-  const endpointRef = useRef(endpoint);
-
-  //create new setEndPoint function that updates the ref
-  const setEndpoint = data => {
-    endpointRef.current = data;
-    _setEndpoint(data);
-  }
 
 
 
-
-  useEffect(() =>{
+  useEffect((props) =>{
+    console.log(props.match.params)
     setCategory();
     category.includes("Movie") ? setMediaType("movie") : setMediaType("tv")
     async function fetchData(){
@@ -41,17 +33,8 @@ const PopularMovies = (props) =>{
       setDataLoaded(true);
     }
     fetchData();
-  }, [endpoint, category])
+  }, [endpoint])
 
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, {
-      passive: true
-    });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
 
   //Sets the endpoint based on route;
   function setCategory() {
@@ -74,22 +57,6 @@ const PopularMovies = (props) =>{
 }
   }
 
-  /*retrieves more data if we scroll to the bottom*/
-  const handleScroll = async () => {
-    const bottom = Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight
-    if (bottom) {
-      const response = await axios.get(`${endpointRef.current}&page=${nextPage}`);
-      nextPage +=1;
-      setPopularMovies(popularMovies => [...popularMovies, ...response.data.results])
-    }
-  };
-
-  const renderPosters = () => {
-    return popularMovies.map((movie) => {
-      return  <ImageCard type={mediaType} id={movie.id} poster_path={movie.poster_path}
-      title={ mediaType === "movie" ? movie.title : movie.name} key={movie.id} />
-    })
-  }
 
   if (dataLoaded === false) {
     return <Loader />
